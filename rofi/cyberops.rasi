@@ -1,0 +1,39 @@
+* {
+    bg: #050816;
+    bg-alt: #10192B;
+    fg: #E7FBFF;
+    dim: #74849C;
+    cyan: #00F5FF;
+    magenta: #FF2D95;
+    green: #39FF14;
+    selection: #252047;
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+window {
+    width: 520px;
+    border: 2px;
+    border-color: @cyan;
+    border-radius: 8px;
+    background-color: @bg;
+    padding: 14px;
+}
+
+mainbox { spacing: 10px; }
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 6px;
+    padding: 10px;
+}
+prompt { text-color: @cyan; }
+entry { text-color: @fg; }
+listview { lines: 10; spacing: 5px; }
+element {
+    padding: 8px;
+    border-radius: 5px;
+}
+element selected {
+    background-color: @selection;
+    text-color: @green;
+}
+element-text { text-color: inherit; }

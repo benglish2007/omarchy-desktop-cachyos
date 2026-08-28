@@ -1,0 +1,24 @@
+background = 050816
+foreground = E7FBFF
+cursor-color = 00F5FF
+selection-background = 252047
+selection-foreground = FFFFFF
+font-family = JetBrainsMono Nerd Font
+background-opacity = 0.94
+
+palette = 0=#03040C
+palette = 1=#FF3147
+palette = 2=#39FF14
+palette = 3=#FFE600
+palette = 4=#2378FF
+palette = 5=#FF2D95
+palette = 6=#00F5FF
+palette = 7=#B8D8E4
+palette = 8=#34405A
+palette = 9=#FF6070
+palette = 10=#83FF6B
+palette = 11=#FFF06A
+palette = 12=#74A7FF
+palette = 13=#FF78BB
+palette = 14=#72FBFF
+palette = 15=#FFFFFF

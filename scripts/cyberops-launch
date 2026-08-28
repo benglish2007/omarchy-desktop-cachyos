@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v fuzzel >/dev/null 2>&1; then
+    exec fuzzel --config "$HOME/.config/fuzzel/cyberops.ini"
+elif command -v rofi >/dev/null 2>&1; then
+    exec rofi -show drun -theme "$HOME/.config/rofi/cyberops.rasi"
+else
+    notify-send "CYBEROPS" "Install fuzzel or rofi-wayland for the launcher." 2>/dev/null || true
+    exit 1
+fi

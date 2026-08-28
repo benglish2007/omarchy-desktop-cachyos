@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for term in kitty foot ghostty alacritty wezterm konsole; do
+    if command -v "$term" >/dev/null 2>&1; then
+        exec "$term"
+    fi
+done
+
+notify-send "CYBEROPS" "No supported terminal found." 2>/dev/null || true
+exit 1

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+hyprctl reload >/dev/null 2>&1 || true
+
+# Quickshell normally watches QML files; restart only the named shell if qs is available.
+if command -v qs >/dev/null 2>&1; then
+    qs -c cyberops kill >/dev/null 2>&1 || true
+fi
+nohup quickshell -c cyberops >/tmp/cyberops-quickshell.log 2>&1 &
+notify-send "CYBEROPS" "Theme reloaded" 2>/dev/null || true

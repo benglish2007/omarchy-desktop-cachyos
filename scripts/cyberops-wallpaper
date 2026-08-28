@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/cyberops-cachyos"
+WALLDIR="${XDG_DATA_HOME:-$HOME/.local/share}/cyberops-cachyos/backgrounds"
+INDEX_FILE="$STATE/wallpaper-index"
+mkdir -p "$STATE" "$WALLDIR"
+
+fetch_wallpapers() {
+    command -v curl >/dev/null 2>&1 || return 1
+    base="https://raw.githubusercontent.com/benglish2007/cyberops-omarchy-theme/main/backgrounds"
+    for name in cyberops-command-deck.png cyberops-junior-inventor.png cyberops-girl-inventor.png; do
+        [ -s "$WALLDIR/$name" ] || curl -fL --retry 2 -o "$WALLDIR/$name" "$base/$name" || true
+    done
+}
+
+mapfile -t walls < <(find "$WALLDIR" -maxdepth 1 -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) | sort)
+if [ "${#walls[@]}" -eq 0 ]; then
+    fetch_wallpapers || true
+    mapfile -t walls < <(find "$WALLDIR" -maxdepth 1 -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) | sort)
+fi
+
+[ "${#walls[@]}" -gt 0 ] || { echo "No CYBEROPS wallpapers available." >&2; exit 1; }
+
+idx=0
+[ -f "$INDEX_FILE" ] && idx="$(cat "$INDEX_FILE" 2>/dev/null || echo 0)"
+[[ "$idx" =~ ^[0-9]+$ ]] || idx=0
+
+case "${1:-apply}" in
+    next) idx=$(( (idx + 1) % ${#walls[@]} )) ;;
+    prev) idx=$(( (idx - 1 + ${#walls[@]}) % ${#walls[@]} )) ;;
+    apply) ;;
+    *) echo "usage: cyberops-wallpaper [apply|next|prev]" >&2; exit 2 ;;
+esac
+
+echo "$idx" > "$INDEX_FILE"
+wall="${walls[$idx]}"
+
+if command -v swww >/dev/null 2>&1; then
+    swww query >/dev/null 2>&1 || swww-daemon >/dev/null 2>&1 &
+    sleep 0.2
+    swww img "$wall" --transition-type grow --transition-duration 0.8
+elif command -v hyprpaper >/dev/null 2>&1; then
+    pgrep -x hyprpaper >/dev/null || (nohup hyprpaper >/tmp/cyberops-hyprpaper.log 2>&1 & sleep 0.4)
+    hyprctl hyprpaper preload "$wall" >/dev/null 2>&1 || true
+    hyprctl hyprpaper wallpaper ",$wall" >/dev/null 2>&1 || true
+else
+    echo "Install swww or hyprpaper to set wallpapers." >&2
+    exit 1
+fi
